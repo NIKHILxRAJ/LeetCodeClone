@@ -9,7 +9,7 @@ problemrouter.put('/update/:id', adminmiddleware, updateproblem);
 
 problemrouter.delete('/delete/:id', adminmiddleware, deleteproblem);
 
-problemrouter.get('/problemById/:id',usermiddleware, getproblembyid);
+problemrouter.get('/getProblemById/:id',usermiddleware, getproblembyid);
 
 problemrouter.get('/getAllProblem',usermiddleware, getallproblem);
 problemrouter.get('/submittedProblem/:pid' ,usermiddleware, submittedProblem);

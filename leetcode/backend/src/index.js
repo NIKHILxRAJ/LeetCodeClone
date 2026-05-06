@@ -37,7 +37,7 @@ const initializeconnection = async () => {
     console.log("db connected");
 
     try {
-      await redisclient.connect();
+      
       console.log("redis connected");
     } catch (redisErr) {
       console.log("⚠️ Redis not connected, continuing without Redis");

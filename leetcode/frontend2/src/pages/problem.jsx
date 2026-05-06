@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 import Editor from "@monaco-editor/react";
 import axiosClient from "../utils/axiosclient";
 import ChatAi from "./chatai";
@@ -32,8 +32,8 @@ const ProblemPage = () => {
         setLoading(true);
 
         const response = await axiosClient.get(
-          `/problem/problemById/${problemId}`
-        );
+  `/problem/getProblemById/${problemId}`
+);
 
         setProblem(response.data);
 
