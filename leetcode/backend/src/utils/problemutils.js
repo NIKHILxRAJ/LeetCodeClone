@@ -33,7 +33,7 @@ if (!fs.existsSync(TEMP_DIR)) {
       RUN CPP CODE
 =============================== */
 
-const runCppWithDocker = (code) => {
+const runCppWithDocker = (code, input = "") => {
 
   return new Promise((resolve) => {
 
@@ -48,38 +48,38 @@ const runCppWithDocker = (code) => {
         `main_${uniqueId}.cpp`
       );
 
+    const inputFile =
+      path.join(
+        TEMP_DIR,
+        `input_${uniqueId}.txt`
+      );
+
     const exeFile =
       `main_${uniqueId}`;
 
     fs.writeFileSync(cppFile, code);
+    fs.writeFileSync(inputFile, input);
 
     const command = `
 docker run --rm \
 -v ${TEMP_DIR}:/app \
 -w /app \
 gcc:13 \
-sh -c "g++ ${path.basename(cppFile)} -o ${exeFile} && ./${exeFile}"
+sh -c "g++ ${path.basename(cppFile)} -o ${exeFile} && ./${exeFile} < ${path.basename(inputFile)}"
 `;
 
     exec(
-
       command,
-
-      {
-        timeout: 15000
-      },
-
+      { timeout: 15000 },
       (error, stdout, stderr) => {
-
-        console.log("STDOUT:", stdout);
-        console.log("STDERR:", stderr);
-        console.log("ERROR:", error);
-
-        /* CLEANUP */
 
         try {
 
           fs.unlinkSync(cppFile);
+
+          if (fs.existsSync(inputFile)) {
+            fs.unlinkSync(inputFile);
+          }
 
           const exePath =
             path.join(TEMP_DIR, exeFile);
@@ -89,8 +89,6 @@ sh -c "g++ ${path.basename(cppFile)} -o ${exeFile} && ./${exeFile}"
           }
 
         } catch (_) {}
-
-        /* HANDLE ERROR */
 
         if (error) {
 
@@ -106,12 +104,9 @@ sh -c "g++ ${path.basename(cppFile)} -o ${exeFile} && ./${exeFile}"
             status: "error",
             output:
               stderr?.toString() ||
-              error.message ||
-              "Runtime Error"
+              error.message
           });
         }
-
-        /* SUCCESS */
 
         resolve({
           status: "success",

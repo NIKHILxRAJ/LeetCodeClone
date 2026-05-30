@@ -101,13 +101,16 @@ const submitcode = async (req, res) => {
       problem.hiddentestcases
     ) {
 
-      const result =
-        await runCppWithDocker(code);
+    const result =
+  await runCppWithDocker(
+    code,
+    testcase.input
+  );
 
-      console.log(
-        "Program Output:",
-        result.output
-      );
+console.log("===== SUBMIT =====");
+console.log("Input:", testcase.input);
+console.log("Expected:", testcase.output);
+console.log("Actual:", result.output);
 
       console.log(
         "Expected Output:",
@@ -236,7 +239,15 @@ const runcode = async (req, res) => {
     ) {
 
       const result =
-        await runCppWithDocker(code);
+  await runCppWithDocker(
+    code,
+    testcase.input
+  );
+
+console.log("===== RUN =====");
+console.log("Input:", testcase.input);
+console.log("Expected:", testcase.output);
+console.log("Actual:", result.output);
 
       console.log(
         "Program Output:",
